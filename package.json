@@ -3,7 +3,7 @@
   "displayName": "IntelliREADME - AI README Generator",
   "description": "Generate professional, project-specific README files with AI (Groq) or smart templates. Users provide their own free API key for unlimited AI generation.",
   "version": "1.0.0",
-  "publisher": "your-publisher-name",
+  "publisher": "yatish-chaubal",
   "icon": "assets/icon.png",
   "repository": {
     "type": "git",

@@ -217,9 +217,9 @@ class IntelliREADMEExtension {
       placeHolder: "gsk_...",
       ignoreFocusOut: true,
       validateInput: (value) => {
-        if (!value) return "API key is required";
-        if (!value.startsWith("gsk_")) return 'Groq API keys start with "gsk_"';
-        if (value.length < 40) return "API key seems too short";
+        if (!value) {return "API key is required";}
+        if (!value.startsWith("gsk_")) {return 'Groq API keys start with "gsk_"';}
+        if (value.length < 40) {return "API key seems too short";}
         return null;
       },
     });
