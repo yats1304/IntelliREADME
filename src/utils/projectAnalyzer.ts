@@ -54,15 +54,15 @@ export class ProjectAnalyzer {
   private static detectFramework(projectInfo: ProjectInfo): string {
     const deps = [...projectInfo.dependencies, ...projectInfo.devDependencies];
 
-    if (deps.some((dep) => dep.includes("next"))) return "Next.js";
-    if (deps.some((dep) => dep.includes("nuxt"))) return "Nuxt.js";
-    if (deps.some((dep) => dep.includes("react"))) return "React";
-    if (deps.some((dep) => dep.includes("vue"))) return "Vue.js";
-    if (deps.some((dep) => dep.includes("angular"))) return "Angular";
-    if (deps.some((dep) => dep.includes("express"))) return "Express.js";
-    if (deps.some((dep) => dep.includes("nestjs"))) return "NestJS";
-    if (projectInfo.fileTypes.includes(".py")) return "Python";
-    if (deps.length > 0) return "Node.js";
+    if (deps.some((dep) => dep.includes("next"))) {return "Next.js";}
+    if (deps.some((dep) => dep.includes("nuxt"))) {return "Nuxt.js";}
+    if (deps.some((dep) => dep.includes("react"))) {return "React";}
+    if (deps.some((dep) => dep.includes("vue"))) {return "Vue.js";}
+    if (deps.some((dep) => dep.includes("angular"))) {return "Angular";}
+    if (deps.some((dep) => dep.includes("express"))) {return "Express.js";}
+    if (deps.some((dep) => dep.includes("nestjs"))) {return "NestJS";}
+    if (projectInfo.fileTypes.includes(".py")) {return "Python";}
+    if (deps.length > 0) {return "Node.js";}
 
     return "Software";
   }

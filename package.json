@@ -1,23 +1,237 @@
 {
-  "name": "IntelliREADME",
-  "displayName": "intellireadme",
-  "description": "AI-powered README generator with hybrid fallback (Copilot + External AI + Templates)",
-  "version": "0.0.1",
+  "name": "intellireadme",
+  "displayName": "IntelliREADME - AI README Generator",
+  "description": "Generate professional, project-specific README files with AI (Groq) or smart templates. Users provide their own free API key for unlimited AI generation.",
+  "version": "1.0.0",
+  "publisher": "your-publisher-name",
+  "icon": "assets/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/intellireadme.git"
+  },
+  "homepage": "https://github.com/yourusername/intellireadme#readme",
+  "bugs": {
+    "url": "https://github.com/yourusername/intellireadme/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "readme",
+    "documentation",
+    "generator",
+    "ai",
+    "groq",
+    "markdown",
+    "template",
+    "project",
+    "automatic",
+    "professional",
+    "github"
+  ],
   "engines": {
-    "vscode": "^1.104.0"
+    "vscode": "^1.74.0"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Snippets",
+    "Formatters",
+    "Documentation"
   ],
   "activationEvents": [
-    "onCommand:IntelliREADME.generateReadme"
+    "onCommand:IntelliREADME.generateReadme",
+    "onCommand:IntelliREADME.setApiKey",
+    "onCommand:IntelliREADME.showHelp",
+    "onCommand:IntelliREADME.showStatus"
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "IntelliREADME",
+      "properties": {
+        "intelliReadme.groqApiKey": {
+          "type": "string",
+          "description": "Your Groq API key for AI-powered README generation",
+          "scope": "application",
+          "markdownDescription": "Get your **free** API key from [console.groq.com](https://console.groq.com). Sign up takes 2 minutes, no credit card required!"
+        },
+        "intelliReadme.preferredModel": {
+          "type": "string",
+          "enum": [
+            "moonshotai/kimi-k2-instruct",
+            "llama-3.3-70b-versatile",
+            "llama-3.1-8b-instant",
+            "gemma2-9b-it"
+          ],
+          "enumDescriptions": [
+            "Moonshot AI - Best for comprehensive documentation (Recommended)",
+            "Llama 3.3 70B - Most capable model, detailed output",
+            "Llama 3.1 8B - Fastest response time, good quality",
+            "Gemma 2 9B - Google's efficient model, reliable results"
+          ],
+          "default": "moonshotai/kimi-k2-instruct",
+          "description": "Preferred AI model for README generation",
+          "markdownDescription": "Choose the AI model that best fits your needs. **moonshotai/kimi-k2-instruct** is recommended for most projects."
+        },
+        "intelliReadme.enableAI": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable AI-powered README generation (requires API key)",
+          "markdownDescription": "When enabled, shows AI generation option if API key is configured. Disable to use templates only."
+        },
+        "intelliReadme.templateStyle": {
+          "type": "string",
+          "enum": [
+            "comprehensive",
+            "minimal",
+            "startup",
+            "enterprise"
+          ],
+          "enumDescriptions": [
+            "Detailed README with all sections - best for most projects",
+            "Clean and concise README - essential sections only",
+            "Startup-focused with features and demo sections",
+            "Enterprise-grade with compliance and architecture sections"
+          ],
+          "default": "comprehensive",
+          "description": "Template style when using template generation",
+          "markdownDescription": "Choose the template style that matches your project type and audience."
+        },
+        "intelliReadme.includeProjectStructure": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include detailed project folder structure in README",
+          "markdownDescription": "When enabled, analyzes and includes your project's folder structure in the generated README."
+        },
+        "intelliReadme.includeBadges": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include technology badges (shields.io) in README",
+          "markdownDescription": "Automatically generates badges for detected technologies like React, TypeScript, etc."
+        },
+        "intelliReadme.autoDetectFramework": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically detect project framework and type",
+          "markdownDescription": "Analyzes package.json and file structure to determine project type for better content generation."
+        }
+      }
+    },
     "commands": [
       {
         "command": "IntelliREADME.generateReadme",
-        "title": "Generate README"
+        "title": "Generate README",
+        "category": "IntelliREADME",
+        "icon": "$(file-text)",
+        "tooltip": "Generate professional README with AI or templates"
+      },
+      {
+        "command": "IntelliREADME.setApiKey",
+        "title": "Manage API Key",
+        "category": "IntelliREADME",
+        "icon": "$(key)",
+        "tooltip": "Add, update, or test your Groq API key"
+      },
+      {
+        "command": "IntelliREADME.showHelp",
+        "title": "Help & Setup Guide",
+        "category": "IntelliREADME",
+        "icon": "$(question)",
+        "tooltip": "View setup guide and documentation"
+      },
+      {
+        "command": "IntelliREADME.showStatus",
+        "title": "Show Configuration Status",
+        "category": "IntelliREADME",
+        "icon": "$(info)",
+        "tooltip": "View current extension configuration and status"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "explorerResourceIsFolder && workspaceFolderCount > 0",
+          "command": "IntelliREADME.generateReadme",
+          "group": "IntelliREADME@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "IntelliREADME.generateReadme",
+          "when": "workspaceFolderCount > 0",
+          "group": "IntelliREADME"
+        },
+        {
+          "command": "IntelliREADME.setApiKey",
+          "group": "IntelliREADME"
+        },
+        {
+          "command": "IntelliREADME.showHelp",
+          "group": "IntelliREADME"
+        },
+        {
+          "command": "IntelliREADME.showStatus",
+          "group": "IntelliREADME"
+        }
+      ],
+      "editor/title": [
+        {
+          "when": "resourceFilename == package.json",
+          "command": "IntelliREADME.generateReadme",
+          "group": "navigation@1"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "IntelliREADME.generateReadme",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
+        "when": "workspaceFolderCount > 0"
+      },
+      {
+        "command": "IntelliREADME.setApiKey",
+        "key": "ctrl+alt+k",
+        "mac": "cmd+alt+k"
+      }
+    ],
+    "walkthroughs": [
+      {
+        "id": "intellireadme.setup",
+        "title": "🚀 Get Started with IntelliREADME",
+        "description": "Learn how to generate amazing READMEs with AI or templates",
+        "steps": [
+          {
+            "id": "open.project",
+            "title": "Open a Project",
+            "description": "Open any project folder to analyze",
+            "media": {
+              "markdown": "Open a project folder in VS Code to get started with README generation."
+            }
+          },
+          {
+            "id": "run.command",
+            "title": "Generate README",
+            "description": "Run the main command to start generation",
+            "media": {
+              "markdown": "Press `Ctrl+Shift+P` and type 'Generate README' or use the keyboard shortcut `Ctrl+Alt+R`"
+            }
+          },
+          {
+            "id": "choose.method",
+            "title": "Choose Generation Method",
+            "description": "Select AI-powered or template generation",
+            "media": {
+              "markdown": "Choose between AI-powered generation (requires free API key) or instant template generation."
+            }
+          },
+          {
+            "id": "setup.api",
+            "title": "Setup API Key (Optional)",
+            "description": "Get free API key for AI features",
+            "media": {
+              "markdown": "Visit [console.groq.com](https://console.groq.com) to get your free API key for unlimited AI-powered READMEs."
+            }
+          }
+        ]
       }
     ]
   },
@@ -32,11 +246,15 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "check-types": "tsc --noEmit",
-    "lint": "eslint src",
-    "test": "vscode-test"
+    "lint": "eslint src --ext ts",
+    "lint:fix": "eslint src --ext ts --fix",
+    "test": "vscode-test",
+    "package-extension": "vsce package",
+    "publish": "vsce publish",
+    "clean": "rimraf dist out"
   },
   "devDependencies": {
-    "@types/vscode": "^1.104.0",
+    "@types/vscode": "^1.74.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
     "@typescript-eslint/eslint-plugin": "^8.42.0",
@@ -46,6 +264,39 @@
     "npm-run-all": "^4.1.5",
     "typescript": "^5.9.2",
     "@vscode/test-cli": "^0.0.11",
-    "@vscode/test-electron": "^2.5.2"
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.0.0",
+    "rimraf": "^5.0.0"
+  },
+  "extensionDependencies": [],
+  "extensionKind": [
+    "workspace"
+  ],
+  "capabilities": {
+    "virtualWorkspaces": false,
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "IntelliREADME requires file system access to analyze project structure and generate documentation."
+    }
+  },
+  "badges": [
+    {
+      "url": "https://img.shields.io/visual-studio-marketplace/v/your-publisher-name.intellireadme",
+      "href": "https://marketplace.visualstudio.com/items?itemName=your-publisher-name.intellireadme",
+      "description": "Visual Studio Marketplace Version"
+    },
+    {
+      "url": "https://img.shields.io/visual-studio-marketplace/i/your-publisher-name.intellireadme",
+      "href": "https://marketplace.visualstudio.com/items?itemName=your-publisher-name.intellireadme",
+      "description": "Visual Studio Marketplace Installs"
+    }
+  ],
+  "galleryBanner": {
+    "color": "#007acc",
+    "theme": "dark"
+  },
+  "qna": "https://github.com/yourusername/intellireadme/discussions",
+  "sponsor": {
+    "url": "https://github.com/sponsors/yourusername"
   }
 }

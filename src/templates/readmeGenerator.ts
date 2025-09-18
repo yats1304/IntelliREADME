@@ -112,7 +112,7 @@ export class ReadmeGenerator {
     depth: number,
     prefix: string = ""
   ): string {
-    if (depth === 0) return "";
+    if (depth === 0) {return "";}
 
     try {
       const files = fs.readdirSync(dirPath, { withFileTypes: true });
@@ -133,8 +133,8 @@ export class ReadmeGenerator {
           return !skipList.includes(f.name) && !f.name.startsWith(".");
         })
         .sort((a, b) => {
-          if (a.isDirectory() && !b.isDirectory()) return -1;
-          if (!a.isDirectory() && b.isDirectory()) return 1;
+          if (a.isDirectory() && !b.isDirectory()) {return -1;}
+          if (!a.isDirectory() && b.isDirectory()) {return 1;}
           return a.name.localeCompare(b.name);
         });
 
